@@ -1,55 +1,38 @@
-Project Architecture
-Folder Structure
+# 🚀 Fusiontecz Task Management System
 
+**Advanced MERN Stack Assignment** - Multi-user workflow platform with RBAC, task lifecycle management, and activity tracking.
 
-fusiontecz-assignment/
+## ✨ Features Implemented
+
+| Feature | Status | Details |
+|---------|--------|---------|
+| JWT Authentication | ✅ | Secure login/register with bcrypt |
+| Role-Based Access | ✅ | Owner/Member permissions |
+| Kanban Board | ✅ | Drag & drop tasks |
+| Task Lifecycle | ✅ | BACKLOG → IN_PROGRESS → REVIEW → DONE |
+| Activity Logging | ✅ | Full audit trail |
+
+## 🏗️ Project Structure
+
+fusiontecz-task-manager/
 ├── client/ # React Frontend
-│ ├── public/ # Static assets
+│ ├── public/
 │ ├── src/
-│ │ ├── components/ # Reusable UI (KanbanBoard, TaskCard)
-│ │ │ ├── common/ # Button, Modal, Alert
-│ │ │ └── kanban/ # BoardColumn, TaskItem
-│ │ ├── pages/ # Route components
-│ │ │ ├── Dashboard.tsx # Project list
-│ │ │ ├── ProjectPage.tsx # Kanban board
-│ │ │ ├── Login.tsx
-│ │ │ └── Signup.tsx
+│ │ ├── components/
+│ │ │ ├── common/ # Button, Modal
+│ │ │ └── kanban/ # BoardColumn, TaskCard
+│ │ ├── pages/ # Dashboard, ProjectPage
 │ │ ├── store/ # Zustand stores
-│ │ │ ├── projectStore.ts # Projects state
-│ │ │ └── taskStore.ts # Tasks state
-│ │ ├── hooks/ # Custom hooks
-│ │ │ ├── useProjects.ts
-│ │ │ └── useTasks.ts
-│ │ ├── services/ # API calls
-│ │ │ └── api.ts # Axios instance
-│ │ ├── types/ # TypeScript interfaces
-│ │ └── utils/ # Helpers
-│ ├── package.json
-│ └── tailwind.config.js
+│ │ ├── hooks/
+│ │ └── services/
+│ └── package.json
 │
 ├── server/ # Node.js Backend
 │ ├── src/
-│ │ ├── middleware/ # Request handlers
-│ │ │ ├── auth.ts # JWT verification
-│ │ │ ├── rbac.ts # Role-based access
-│ │ │ └── validation.ts # Zod schemas
-│ │ ├── models/ # MongoDB schemas
-│ │ │ ├── Project.ts
-│ │ │ ├── Task.ts
-│ │ │ ├── Activity.ts
-│ │ │ └── User.ts
-│ │ ├── controllers/ # Business logic
-│ │ │ ├── authController.ts
-│ │ │ ├── projectController.ts
-│ │ │ └── taskController.ts
-│ │ ├── routes/ # API routes
-│ │ │ ├── auth.ts
-│ │ │ ├── projects.ts
-│ │ │ └── tasks.ts
-│ │ ├── utils/ # Helpers
-│ │ │ ├── errors.ts # Custom errors
-│ │ │ └── validators.ts # Zod schemas
-│ │ └── index.ts # Server entry
+│ │ ├── middleware/ # auth, rbac, validation
+│ │ ├── models/ # Project, Task, Activity
+│ │ ├── controllers/
+│ │ └── routes/
 │ ├── package.json
 │ └── tsconfig.json
 │
@@ -58,88 +41,84 @@ fusiontecz-assignment/
 └── README.md
 
 
-## 🔄 Data Flow
+## 🔄 Request Flow
 
-User Action (Drag Task)
-↓
-Optimistic UI Update (Zustand)
-↓
-API Call (POST /api/tasks/:id)
-↓
-Middleware Chain:
-
-JWT Auth ✓
-
-Project RBAC ✓
-
-Task Validation ✓
-
-State Transition ✓
-↓
-Controller:
-
-Find task → Check permissions
-
-Validate state (BACKLOG→IN_PROGRESS)
-
-Update task
-
-Create activity log
-↓
-MongoDB Atlas (Indexed queries)
-↓
-Response → Zustand → UI Update
+User Action → Zustand → API Call → Middleware → Controller → MongoDB Atlas
 
 
-## 🛡️ Middleware Stack
+**Middleware Stack:**
+1. CORS
+2. JWT Auth 
+3. RBAC Check
+4. Zod Validation
+5. Business Logic
 
-Every API Request:
-┌─────────────────────────────────────┐
-│ 1. CORS │
-│ 2. Rate Limiting │
-│ 3. Helmet (Security Headers) │
-│ 4. JWT Auth → userId │
-│ 5. Project RBAC → owner/member │
-│ 6. Zod Validation → sanitized data │
-│ 7. Controller Logic │
-└─────────────────────────────────────┘
+## 📊 Task State Machine
 
 
-## 📊 Database Schema
+BACKLOG → IN_PROGRESS
+IN_PROGRESS → REVIEW
+REVIEW → DONE (Terminal)
 
-Project {
-_id, name, description, owner, members[], createdAt
-}
+## 🚀 Quick Start
 
-Task {
-_id, title, description, status, priority,
-assignee, projectId, createdBy, createdAt
-}
+Clone
+git clone <repo-url>
+cd fusiontecz-task-manager
 
-Activity {
-_id, taskId, action, userId, oldValues, newValues, createdAt
-}
+Backend
+cd server && npm install && npm run dev
 
-
-## ⚙️ Key Architectural Decisions
-
-| Layer | Technology | Why? |
-|-------|------------|------|
-| **Frontend State** | Zustand | Zero-boilerplate, devtools, server-state sync |
-| **API Client** | Axios | Interceptors, TypeScript, retry logic |
-| **Validation** | Zod | Type-safe, inference, runtime+compile-time |
-| **Styling** | Tailwind | Utility-first, no CSS bloat, responsive |
-| **Backend** | Express + TS | Familiar, middleware ecosystem |
-| **ORM** | Mongoose | Schema validation, population, TypeScript |
-| **Auth** | JWT + bcrypt | Stateless, secure, scalable |
-
-## 🚀 Deployment Ready
-
-Development: npm run dev (both client/server)
-Production:
-client → npm run build → serve static
-server → npm run build → npm start
+Frontend (new terminal)
+cd client && npm install && npm start
 
 
+**Access:**
+- Frontend: `http://localhost:3000`
+- Backend: `http://localhost:5000`
 
-**Clean, scalable, production-grade architecture matching Fusiontecz requirements!** 🎯
+## 🔧 Environment Setup
+
+**server/.env:**
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/fusiontecz
+JWT_SECRET=your-super-secret-key
+
+**client/.env:**
+
+## 🌐 Key API Endpoints
+
+| Method | Endpoint | Role | Description |
+|--------|----------|------|-------------|
+| POST | `/api/auth/login` | Public | Get JWT |
+| GET | `/api/projects` | User | List projects |
+| POST | `/api/projects/:id/invite` | Owner | Invite member |
+| PUT | `/api/tasks/:id` | Member | Update task |
+
+## 🛡️ Security & Performance
+
+**Security:**
+- ✅ bcrypt password hashing
+- ✅ JWT authentication
+- ✅ Role-based access control
+- ✅ Input validation (Zod)
+- ✅ MongoDB indexes
+
+**Performance:**
+- ✅ Pagination (`?page=1&limit=20`)
+- ✅ Compound indexes
+- ✅ Field projection
+
+## ✅ Fusiontecz Requirements Checklist
+
+- [x] Backend-enforced RBAC
+- [x] Strict state transitions
+- [x] Activity logging
+- [x] Pagination + indexes
+- [x] Clean Git history
+- [x] No node_modules
+
+---
+
+**Fusiontecz Solutions Assignment** | **Production-Ready**  
+**Author: [Your Name]**

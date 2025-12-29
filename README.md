@@ -1,6 +1,5 @@
-# 🏗️ Project Architecture
-
-## 📁 Folder Structure
+Project Architecture
+Folder Structure
 
 
 fusiontecz-assignment/
